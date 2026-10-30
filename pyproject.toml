@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "varizet"
+version = "0.2.0"
+description = "Official Python SDK for the Varizet (واریزت) card-to-card payment API: orders, refunds, webhooks, sandbox."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Varizet" }]
+keywords = ["varizet", "payments", "card-to-card", "iran", "webhooks"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: Django",
+  "Framework :: FastAPI",
+  "Typing :: Typed",
+]
+dependencies = ["httpx>=0.25,<1"]
+
+[project.optional-dependencies]
+django = ["django>=4.2"]
+fastapi = ["fastapi>=0.100"]
+dev = ["pytest>=8", "anyio>=4", "django>=4.2", "fastapi>=0.100", "mypy>=1.10", "ruff>=0.5", "build>=1.2"]
+
+[project.urls]
+Documentation = "https://varizet.ir/developers"
+Source = "https://github.com/Varizet/varizet-python"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/varizet"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/varizet", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+  "error::DeprecationWarning:varizet.*",
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+files = ["src/varizet"]
+
+[[tool.mypy.overrides]]
+module = ["django.*"]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "N", "S", "PT"]
+ignore = ["S101", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S105", "S106", "PT018", "PT011"]
